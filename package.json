@@ -1,0 +1,23 @@
+{
+  "name": "shop-koa",
+  "version": "1.0.0",
+  "description": "This is a project about koa",
+  "main": "app.js",
+  "dependencies": {
+    "koa": "^2.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenhx2015/shop-koa.git"
+  },
+  "author": "chenhuaxiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chenhx2015/shop-koa/issues"
+  },
+  "homepage": "https://github.com/chenhx2015/shop-koa#readme"
+}
