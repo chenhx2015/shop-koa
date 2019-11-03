@@ -1,26 +1,39 @@
 const Koa = require('koa');
 const app = new Koa();
+const bodyParser = require('koa-bodyparser');
+const cors = require('koa-cors');
 
-app.use(async (ctx, next)=> {
-    ctx.body = 'hello word'
-    next()
+// const sqlConnection = require('./db');
+
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '123456',
+  database : 'shop'
 });
 
-app.use(async (ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    ctx.set('X-Response-Time', ms + 'ms');
-})
+connection.connect();
 
-app.use(async (ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-})
+const Router = require('koa-router');
+const router = new Router();
+const mount = require('./api');
+mount(router, connection);
 
-app.use(async ctx=> {
-    ctx.body = 'hello word again!'
+app.use(cors());
+app.use(bodyParser());
+app.use(router.routes());
+
+app.on('error', err => {
+    connection.end();
+    console.log('server error', err);
 });
 
-app.listen(3000);
+const server = app.listen(3000);
+
+function handle(signal) {
+    connection.end();
+    server.close()
+}
+
+process.on('SIGINT', handle);
