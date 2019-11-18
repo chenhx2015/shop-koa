@@ -6,4 +6,8 @@
    3. app.js(koa项目入口文件)
    4. ecosystem.config.js(使用pm2开启服务的配置文件)
    5. note.md(关于koa的使用和中间件的使用及原理分析)
+   
+#### 使用到的辅助工具
+1.nodemon
+2.Insomnia
 

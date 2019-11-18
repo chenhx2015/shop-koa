@@ -25,7 +25,6 @@ app.use(bodyParser());
 app.use(router.routes());
 
 app.on('error', err => {
-    connection.end();
     console.log('server error', err);
 });
 

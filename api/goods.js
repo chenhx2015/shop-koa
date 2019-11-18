@@ -8,23 +8,31 @@ const list = (sqlConnection, filter) => {
             }
             resolve(JSON.parse(JSON.stringify(results))) 
         })
-    }) 
-    // const goodsList = 。。。。
-    // return all goods
+    })
 }
 
 const get = (id) =>{
+    // 获取商品
+
     //find goods then return 
     return goods;
 }
 
-const create = (tille, img, price, qty) => {
-    //create new googds then return
-    return goods;
+const create = (sqlConnection, newGoods) => {
+    // 创建商品（即添加商品）
+    return new Promise((resolve, reject) => {
+        sqlConnection.query('INSERT INTO goods_list (img, name, price, qty) VALUES (?, ?, ?, ? )', [ newGoods.img , newGoods.name , newGoods.price ,newGoods.qty ], function(error, results, fields) {
+            if (error) reject(error)
+            // console.log(results.insertId);
+            console.log('results', results);
+            resolve(results.insertId)
+        });
+    })
 }
 
 
 const replace = (id, tille, img, price, qty) => {
+    // 替换商品
     // find goods
     
     // replace content
@@ -34,6 +42,7 @@ const replace = (id, tille, img, price, qty) => {
 }
 
 const modify = (id, title, img, price, qty) =>{
+    // 修改商品
     // find goods
     
     // modify content
@@ -43,6 +52,7 @@ const modify = (id, title, img, price, qty) =>{
 
 
 const remove = (id) =>{
+    // 删除商品
     // find goods
     
     // remove it 
