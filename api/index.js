@@ -1,7 +1,12 @@
 const  goods = require( './goods') // 首页数据列表
+const user = require('./user') // 用户
+const cart = require('./cart') // 购物车
 
 module.exports = (router, sqlConnection) => {
     // 所有接口都遵循 restful 接口规范
+    /*
+     * 资源：商品 - goods
+     */
     // 获取商品列表
     router.get('/v1/goods', async (ctx, next) =>{
         const goods_list = await goods.list(sqlConnection);
@@ -46,25 +51,59 @@ module.exports = (router, sqlConnection) => {
         next()
     })
 
-    // 暂时忽略以下
-    .post('/mall', (ctx, next) =>{
-        const id = ctx.params.id;
-        const goods = goods.create(id)
-        ctx.body = goods
+    /*
+     * 资源：用户 - user
+     */
+    // 获取用户信息
+    .get('/v1/user', async(ctx, next) =>{
+        const id = ctx.headers.uid;
+        ctx.body = await user.get(sqlConnection, id)
         next()
     })
-    // 替换除了ID之外的其他字段
-    .put('/mall' + ':/id', (ctx, next) =>{
-        const id = ctx.params.id;
-        const goods = goods.replace(id)
-        ctx.body = goods
+
+    // 创建用户信息（注册）
+    .post('/v1/user', async(ctx, next) =>{
+        const username = ctx.request.body.username
+        const pwd = ctx.request.body.pwd
+        ctx.body = await user.create(sqlConnection, username, pwd)
         next()
     })
-    // 修改某个字段（实体的属性）
-    .patch('/goods' + ':/id', (ctx, next) =>{
-        const id = ctx.params.id;
-        const goods = goods.modify(id)
-        ctx.body = goods
+    // 修改用户信息
+    .patch('/v1/user', async(ctx, next) =>{
+        const id = ctx.headers.uid
+        const pwd = ctx.request.body.pwd;
+        ctx.body = await user.modify(sqlConnection, id, pwd)
         next()
     })
+    // 删除用户(注销)
+    .delete('/v1/user', async(ctx, next) =>{
+        const id = ctx.headers.uid;
+        ctx.body = await user.remove(sqlConnection, id)
+        next()
+    })
+
+    /*
+     * 资源：购物车 - cart
+     */
+    // 查询购物车信息
+    .get('/v1/cart', async(ctx, next) => {
+        let uid = ctx.request.headers.uid
+        ctx.body = await cart.get(sqlConnection, uid)
+        next()
+    })
+    // 增加商品至购物车
+    .post('/v1/cart', async(ctx, next) => {
+        let uid = ctx.request.headers.uid
+        let { goods_id, img, name, price, qty } = ctx.request.body
+        ctx.body = await cart.create(sqlConnection, uid, goods_id, img, name, price, qty)
+        next()
+    })
+    // 删除购物车商品
+    .delete('/v1/cart', async(ctx, next) => {
+        let uid = ctx.request.headers.uid
+        let { goods_id } = ctx.request.body
+        ctx.body = await cart.remove(sqlConnection, uid, goods_id)
+        next()
+    })
+    // 修改购物车商品
 }

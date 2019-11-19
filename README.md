@@ -8,6 +8,6 @@
    5. note.md(关于koa的使用和中间件的使用及原理分析)
    
 #### 使用到的辅助工具
-1.nodemon
-2.Insomnia
-
+1.nodemon - node项目的自动重启工具
+2.Insomnia - 测试资源的增删改查
+3.docker - 拉取mysql数据库镜像并运行容器

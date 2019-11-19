@@ -1,9 +1,10 @@
- // 找出符合过滤条件的商品列表
+// 找出符合过滤条件的商品列表
 const list = (sqlConnection, filter) => {
     return new Promise((resolve, reject) => {
         sqlConnection.query('select * from goods_list', (error, results, fields) => {
             if (error) {
                 reject(error)
+                return
             }
             resolve(JSON.parse(JSON.stringify(results))) 
         })
@@ -14,7 +15,10 @@ const list = (sqlConnection, filter) => {
 const remove = (sqlConnection, id) =>{
     return new Promise((resolve, reject) => {
         sqlConnection.query('DELETE FROM goods_list WHERE id=' + id, (error, results, fields) => {
-            if (error) reject(error)
+            if (error) {
+                reject(error)
+                return
+            }
             console.log('results', results)
             resolve(results)
         })
@@ -25,7 +29,10 @@ const remove = (sqlConnection, id) =>{
 const create = (sqlConnection, newGoods) => {
     return new Promise((resolve, reject) => {
         sqlConnection.query('INSERT INTO goods_list (img, name, price, qty) VALUES (?, ?, ?, ? )', [ newGoods.img , newGoods.name , newGoods.price ,newGoods.qty ], function(error, results, fields) {
-            if (error) reject(error)
+            if (error) {
+                reject(error)
+                return
+            }
             console.log('results', results);
             resolve(results.insertId)
         });
@@ -49,15 +56,18 @@ const modify = (sqlConnection, id, name, img, price, qty) =>{
             obj.qty = qty
         }
         sqlConnection.query(sql, obj, (error, results, fields) => {
-            if (error) reject(error)
+            if (error) {
+                reject(error)
+                return
+            }
             resolve(results.changedRows)
         })
     })
 }
 
 module.exports = {
-    list:list, 
-    create:create, 
-    remove:remove, 
-    modify:modify
+    list, 
+    create, 
+    remove, 
+    modify
 } 
